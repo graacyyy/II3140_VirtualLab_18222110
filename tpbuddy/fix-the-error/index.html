@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix the Error!</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic-com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+  <header>
+    <a href="../index.html">
+      <img src="../../src/logo-1.png" alt="TPBuddy Logo">
+    </a>
+  </header>
+
+  <main>
+    <h1>Fix the Error!</h1>
+     <div class="game-container"> 
+      <div class="timer">01:00</div>
+      
+      <div class="progress-bar">
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+      </div>
+
+      <h2 class="instruction">Susunlah kalimat-kalimat dibawah menjadi sebuah paragraf yang baik!</p>
+      <p class="sentence" id="sentence-container"></p>
+      <input type="text" id="answer-input" placeholder="Ketik jawaban Anda di sini">
+
+      <button id="submit-button">Submit</button>
+      <button id="next-button" style="display:none;">Next</button>
+    </div>
+    
+    <div class="feedback" id="feedback"></div>
+
+    <div id="final-screen" style="display:none;">
+      <h3>Kamu keren!</h3>
+      <p>Tetap semangat dan teruslah belajar.</p>
+      <button id="restart-button">Mulai Ulang</button>
+      <button id="back-button">Kembali</button>
+    </div>  
+  </main>
+  
+  <script src="script.js"></script>
+</body>
+</html>
