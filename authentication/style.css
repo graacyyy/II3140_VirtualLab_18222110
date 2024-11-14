@@ -1,0 +1,169 @@
+:root {
+  --pink-100: #FF6CF9;
+  --pink-50: #FCB5F9;
+  --pink-25: #FFDEFD;
+  --blue-100: #3FACF4;
+  --blue-50: #ABD6FF;
+  --blue-25: #D1E8FF;
+  --orange-100: #FFA756;
+  --orange-50:#FFBB7D;
+  --orange-25:#FFECDF;
+  --purple-100: #702AFA;
+  --error: #FF4242;
+  --success: #6FCC7B;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--pink-50), var(--pink-25), var(--orange-25), var(--orange-25), var(--blue-25), var(--blue-50));
+  background-size: 200% 200%;
+  animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.container {
+  background-color: white;
+  padding: 2rem;
+  width: 350px;
+  max-width: 90%;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.logo {
+  width: 80px;
+  margin-bottom: 12px;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.password-field {
+  position: relative;
+}
+
+.input-field {
+  width: 100%;
+  padding-right: 2rem;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--purple-100);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+  transition: opacity 0.15s ease;
+}
+
+.submit-btn:active {
+  opacity: 0.7;
+}
+
+.toggle-link {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.toggle-link a {
+  color: var(--purple-100);
+  text-decoration: none;
+}
+
+.toggle-link a:hover {
+  text-decoration: underline;
+}
+
+.message-div {
+  background-color: var(--pink-25);
+  color: var(--pink-100);
+  width: 100%;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  font-size: 1rem;
+  opacity: 0;
+  animation: fadeOut 7s forwards;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 90%;
+  }
+
+  .input-field, .submit-btn {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .logo {
+    width: 50px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .toggle-link {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 80%;
+    padding: 2rem;
+  }
+
+  .input-field, .submit-btn {
+    padding: 0.8rem;
+  }
+}

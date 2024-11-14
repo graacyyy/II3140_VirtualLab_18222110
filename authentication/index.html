@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication Page</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic-com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+
+  <script type="module" src="firebaseauth.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Login Form -->
+    <div class="form-container" id="login-form">
+      <img src="../src/logo-2.png" alt="Logo" class="logo">
+      <h2>Login</h2>
+      <div id="login-message" class="message-div" style="display: none"></div>
+      <input type="text" placeholder="Email" class="input-field" id="email">
+      
+      <div class="password-field">
+        <input type="password" placeholder="Password" class="input-field" id="password">
+        <img src="../src/eye.png" alt="Show Password" class="toggle-password" onclick="togglePassword('password', this)">
+      </div>  
+      
+      <button class="submit-btn" id="submit-login">Login</button>
+      <p class="toggle-link">Don't have an account? <a href="index.html" id="signup-link">Sign Up</a></p>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="form-container" id="signup-form" style="display: none">
+      <img src="../src/logo-2.png" alt="Logo" class="logo">
+      <h2>Create an Account</h2>
+      <div id="signup-message" class="message-div" style="display: none;"></div>
+      <input type="email" placeholder="Email" class="input-field" id="reg-email">
+      <input type="text" placeholder="First Name" class="input-field" id="fname">
+      <input type="text" placeholder="Last Name" class="input-field" id="lname">
+      
+      <div class="password-field">
+        <input type="password" placeholder="Password" class="input-field" id="create-password">
+        <img src="../src/eye.png" alt="Show Password" class="toggle-password" onclick="togglePassword('create-password', this)">
+      </div>
+  
+      <button class="submit-btn" id="submit-signup">Sign Up</button>
+      <p class="toggle-link">Already have an account? <a href="index.html" id="login-link">Login</a></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

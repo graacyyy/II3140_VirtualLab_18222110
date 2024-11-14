@@ -143,6 +143,122 @@ main h2 {
   margin-bottom: 1.5rem;
 }
 
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar .user-profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: auto;
+}
+
+.navbar .user-profile img {
+  width: 40px;
+  margin-right: 1rem;
+}
+
+.navbar .user-profile h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--purple-100);
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  gap: 2rem;
+  margin-left: auto
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 1rem;
+  color: black;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--purple-100);
+  font-weight: 500;
+}
+
+.logout-btn {
+  background-color: var(--purple-100);
+  color:white;
+  padding: 0.5rem 2rem;
+  border-radius: 36px;
+  border: none;
+  font-family: 'DM Sans';
+  font-size: medium;
+  font-weight: 500;
+}
+
+.logout-btn:hover {
+  background-color: transparent;
+  border-color: black;
+  border-style: solid;
+  padding: 0.4rem 1.85rem;
+  border-color: var(--purple-100);
+  color: var(--purple-100);
+  transition: opacity 0.15s ease;
+  opacity: 0.8;
+}
+
+.login-btn {
+  background-color: var(--purple-100);
+  color:white;
+  padding: 0.5rem 2rem;
+  border-radius: 36px;
+  border: none;
+  font-family: 'DM Sans';
+  font-size: medium;
+  font-weight: 500;
+}
+
+.login-btn:hover {
+  background-color: transparent;
+  border-color: black;
+  border-style: solid;
+  padding: 0.4rem 1.85rem;
+  border-color: var(--purple-100);
+  color: var(--purple-100);
+  transition: opacity 0.15s ease;
+  opacity: 0.8;
+}
+
+.signup-btn {
+  background-color: var(--purple-100);
+  color:white;
+  padding: 0.5rem 2rem;
+  border-radius: 36px;
+  border: none;
+  font-family: 'DM Sans';
+  font-size: medium;
+  font-weight: 500;
+}
+
+.signup-btn:hover {
+  background-color: transparent;
+  border-color: black;
+  border-style: solid;
+  padding: 0.4rem 1.85rem;
+  border-color: var(--purple-100);
+  color: var(--purple-100);
+  transition: opacity 0.15s ease;
+  opacity: 0.8;
+}
 
 @media (max-width: 768px) {
   header {
