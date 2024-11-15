@@ -1,3 +1,23 @@
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCL-NCq1jnZnTrOME0Lox4PD9ay3LLK0Xw",
+  authDomain: "tpbuddy-aef41.firebaseapp.com",
+  projectId: "tpbuddy-aef41",
+  storageBucket: "tpbuddy-aef41.appspot.com",
+  messagingSenderId: "535405660972",
+  appId: "1:535405660972:web:8ddf0cafbb5b2e532c3a89"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore();
+const auth = getAuth();
+
 const sentenceContainer = document.getElementById('sentence-container');
 const dropZone = document.getElementById('drop-zone');
 const submitButton = document.getElementById('submit-button');
@@ -6,9 +26,12 @@ const progressSegments = document.querySelectorAll('.progress-segment');
 const timerDisplay = document.querySelector('.timer');
 
 let currentQuestion = 0;
-const totalQuestions = 10;
+let seconds = 60; // 1 minute
 let timer;
-let seconds = 60; // 1 minutes
+let userId = null;
+let totalScore = 0; // Total score overall
+let questionScores = []; // Array for storing scores for each question
+let scoreSaved = false; // Flag to check if the score has been saved
 
 const questions = [
   {
@@ -160,9 +183,21 @@ const questions = [
       'Selain itu, olahraga juga membantu mengurangi stres dan meningkatkan kualitas tidur.',
       'Pilihlah jenis olahraga yang Anda sukai agar dapat dilakukan secara konsisten.'
     ]
-  },
+  }
 ];
 
+// Authentication listener
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    userId = user.uid;
+    console.log("User is logged in with UID:", userId);
+  } else {
+    console.log("No user is logged in");
+    window.location.href = "../login.html";
+  }
+});
+
+// Start the timer
 function startTimer() {
   timer = setInterval(() => {
     seconds--;
@@ -183,11 +218,15 @@ function stopTimer() {
   clearInterval(timer);
 }
 
-function showFinalScreen() {
-  document.querySelector('.game-container').style.display = 'none'; // Hide quiz elements
-  document.getElementById('final-screen').style.display = 'block'; // Show final screen
+// Shuffle function for sentences
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
+// Reset the game
 function resetGame() {
   seconds = 60;
   timerDisplay.textContent = '01:00';
@@ -218,16 +257,11 @@ function resetGame() {
   submitButton.style.display = 'block';
   nextButton.style.display = 'none';
 
+  // Display the question
   timerDisplay.textContent = questions[currentQuestion].question;
 }
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
+// Drag and Drop Functions
 function dragStart() {
   this.classList.add('dragging');
 }
@@ -255,7 +289,6 @@ function drop() {
   this.appendChild(draggingSentence);
 }
 
-// Drop listeners
 dropZone.addEventListener('dragover', dragOver);
 dropZone.addEventListener('dragenter', dragEnter);
 dropZone.addEventListener('dragleave', dragLeave);
@@ -272,18 +305,31 @@ submitButton.addEventListener('click', () => {
 // Next button listener
 nextButton.addEventListener('click', () => {
   currentQuestion++;
-  if (currentQuestion < totalQuestions) {
+  if (currentQuestion < questions.length) {
     resetGame();
   } else {
     showFinalScreen();
   }
 });
 
+// Check answers (with the original logic)
 function checkAnswers() {
   const droppedSentences = Array.from(dropZone.children).map(child => child.textContent);
   const correctOrder = questions[currentQuestion].correctOrder;
 
-  let isCorrect = JSON.stringify(droppedSentences) === JSON.stringify(correctOrder);
+  let isCorrect = true;
+  
+  // Pastikan semua tempat terisi, jika ada yang kosong dianggap salah
+  if (droppedSentences.includes("") || droppedSentences.length !== correctOrder.length) {
+    isCorrect = false;
+  }
+
+  // Compare the sentences one by one
+  droppedSentences.forEach((sentence, index) => {
+    if (sentence !== correctOrder[index]) {
+      isCorrect = false;
+    }
+  });
 
   droppedSentences.forEach((sentence, index) => {
     const sentenceElement = dropZone.children[index];
@@ -295,19 +341,58 @@ function checkAnswers() {
   });
 
   updateProgressBar(isCorrect);
+  if (isCorrect) {
+    questionScores[currentQuestion] = 1;
+  } else {
+    questionScores[currentQuestion] = 0;
+  }
 }
 
-document.getElementById('restart-button').addEventListener('click', () => {
-  currentQuestion = 0;
-  document.getElementById('final-screen').style.display = 'none';
-  document.querySelector('.game-container').style.display = 'block'; 
-  resetGame();
-});
+// Save the score in Firestore
+async function saveScore() {
+  if (!userId) {
+    console.error("No user logged in");
+    return;
+  }
 
-document.getElementById('back-button').addEventListener('click', () => {
-  window.location.href = '../index.html';
-});
+  // Check if the score has already been saved
+  if (scoreSaved) {
+    console.log("Score already saved");
+    return;
+  }
 
+  const scoresCollectionRef = collection(db, "scores", userId, "jumbled-paragraph");
+
+  try {
+    const total = questionScores.reduce((acc, score) => acc + score, 0); // Aggregate all scores from questionScores
+
+    // Add new score with a unique ID to the Firestore collection
+    await addDoc(scoresCollectionRef, {
+      score: total,
+      timestamp: Timestamp.now() // Add timestamp for when the score was saved
+    });
+
+    console.log("New score saved:", total);
+
+    // Set the flag to true so that it does not get saved again
+    scoreSaved = true;
+  } catch (error) {
+    console.error("Error saving score: ", error);
+  }
+}
+
+// Show final screen after the game
+async function showFinalScreen() {
+  document.querySelector('.game-container').style.display = 'none'; // Hide game elements
+  document.getElementById('final-screen').style.display = 'block'; // Show final screen
+
+  // Save the score at the end of the game (only once)
+  if (!scoreSaved && userId) {
+    await saveScore(); // Save all scores for the user
+  }
+}
+
+// Update the progress bar
 function updateProgressBar(isCorrect) {
   progressSegments[currentQuestion].classList.add('correct');
   if (!isCorrect) {
@@ -315,9 +400,29 @@ function updateProgressBar(isCorrect) {
   }
 }
 
+// Progress bar management
 function progressBar() {
   progressSegments[currentQuestion].classList.add('active');
 }
 
-// Initialize quiz
+// Restart button listener (with null check)
+const restartButton = document.getElementById('restart-button');
+if (restartButton) {
+  restartButton.addEventListener('click', () => {
+    currentQuestion = 0;
+    document.getElementById('final-screen').style.display = 'none';
+    document.querySelector('.game-container').style.display = 'block'; 
+    resetGame();
+  });
+}
+
+// Back button listener (with null check)
+const backButton = document.getElementById('back-button');
+if (backButton) {
+  backButton.addEventListener('click', () => {
+    window.history.back();
+  });
+};
+
+// Initialize the game
 resetGame();
