@@ -107,7 +107,7 @@ onAuthStateChanged(auth, async (user) => {
     console.log("User is logged in with UID:", userId);
   } else {
     console.log("No user is logged in");
-    window.location.href = "../login.html";
+    window.location.href = "../authentication/index.html";
   }
 });
 
